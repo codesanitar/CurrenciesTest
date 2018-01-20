@@ -1,0 +1,47 @@
+<resources>
+
+    <style name="Theme.AppCompat.Light.NoActionBar.TranslucentStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar.TranslucentStatusBar">
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="searchViewStyle">@style/ToolbarSearchView</item>
+        <item name="android:windowBackground">@color/backgroundPrimary</item>
+    </style>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ActionBarThemeOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="searchViewStyle">@style/ToolbarSearchView</item>
+        <item name="android:textColorPrimary">#000000</item>
+    </style>
+
+    <style name="ToolbarSearchView" parent="Base.Widget.AppCompat.SearchView">
+    </style>
+
+    <style name="TabsCustomTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/tabColor</item>
+    </style>
+
+    <style name="TabsCustomTextSelectedAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/tabColorSelected</item>
+    </style>
+</resources>

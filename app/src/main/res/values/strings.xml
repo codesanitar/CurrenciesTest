@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CurrenciesTest</string>
+    <string name="header_all_rates">All Rates</string>
+    <string name="header_converter">Converter</string>
+    <string name="header_rates_conversions"><![CDATA[Rates & conversions]]></string>
+    <string name="rlc_loading">loading…</string>
+</resources>

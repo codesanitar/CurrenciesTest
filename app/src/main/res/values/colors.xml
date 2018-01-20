@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#F9F9F9</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="backgroundPrimary">#F9F9F9</color>
+    <color name="tabColor">#99000000</color>
+    <color name="tabColorSelected">@android:color/black</color>
+    <color name="color_gray">#555555</color>
+    <color name="colorCircleBorder">#555555</color>
+</resources>

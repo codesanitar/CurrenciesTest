@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:foreground="?android:attr/selectableItemBackground"
+    >
+
+    <org.paramedic.homeless.currenciestest.ui.widget.CircleImageView
+        android:id="@+id/image"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:rlc_border_width="2dp"
+        app:rlc_border_color="@color/colorCircleBorder"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="start|center"
+        >
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"
+            tools:text="EUR"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-light"
+            />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:layout_margin="@dimen/text_margin"
+            tools:text="Euro"
+            android:textSize="13sp"
+            android:textColor="@color/color_gray"
+            android:fontFamily="sans-serif-light"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:layout_weight="1"
+        tools:text="1.2222"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:fontFamily="sans-serif-light"
+        />
+</LinearLayout>
