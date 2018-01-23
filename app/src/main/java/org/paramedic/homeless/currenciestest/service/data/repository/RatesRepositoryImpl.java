@@ -1,5 +1,7 @@
 package org.paramedic.homeless.currenciestest.service.data.repository;
 
+import android.util.Log;
+
 import com.google.gson.JsonElement;
 
 import org.paramedic.homeless.currenciestest.service.data.response.RateResponse;
@@ -21,6 +23,8 @@ import static org.paramedic.homeless.currenciestest.StaticConfig.DEFAULT_ROUNDIN
  */
 
 public class RatesRepositoryImpl implements RatesRepository {
+
+    final static String TAG = "RatesRepositoryImpl";
 
     private final BehaviorProcessor<List<RateEntity>> processorRateEntity = BehaviorProcessor.create();
     private final BehaviorProcessor<BaseAmount> processorBaseAmount = BehaviorProcessor.create();
@@ -85,8 +89,10 @@ public class RatesRepositoryImpl implements RatesRepository {
     }
 
     @Override
-    public synchronized void updateAmount(BaseAmount baseAmount) {
-      processorBaseAmount.onNext(baseAmount);
+    public void updateAmount(BaseAmount baseAmount) {
+        synchronized (processorBaseAmount) {
+            processorBaseAmount.onNext(baseAmount);
+        }
     }
 
     @Override
@@ -94,49 +100,53 @@ public class RatesRepositoryImpl implements RatesRepository {
         RateEntityFactory<RateEntity> rateEntityRateEntityFactory = RateEntity::new;
         RateEntity firstEntity = rateEntityRateEntityFactory.create(rateResponse.getBase());
 
-        if (processorRateEntity.hasValue()) {
-            final List<RateEntity> tempList = new ArrayList<>();
-            tempList.addAll(processorRateEntity.getValue());
-            RateEntity baseEntity = null;
-            for (RateEntity rateEntity :tempList
-                    ) {
-                if (rateEntity.isBase()) {
-                    baseEntity = rateEntity;
-                    break;
+        synchronized (processorRateEntity) {
+            if (processorRateEntity.hasValue()) {
+                final List<RateEntity> tempList = new ArrayList<>();
+                tempList.addAll(processorRateEntity.getValue());
+                RateEntity baseEntity = null;
+                for (RateEntity rateEntity : tempList
+                        ) {
+                    if (rateEntity.isBase()) {
+                        baseEntity = rateEntity;
+                        break;
+                    }
+                }
+                if (baseEntity != null && baseEntity.getId() != firstEntity.getId()) {
+                    //Well, we waiting for another base
+                    return;
                 }
             }
-            if (baseEntity != null && baseEntity.getId() != firstEntity.getId()) {
-                //Well, we waiting for another base
-                return;
-            }
-        }
 
-        List<RateEntity> rates = new ArrayList<>();
-        if (firstEntity != null) {
-            firstEntity.setValue(new BigDecimal("1"));
-            firstEntity.setBase(true);
-            rates.add(firstEntity);
-            if (!processorBaseAmount.hasValue()) {
-                final BaseAmount baseAmount = new BaseAmount();
-                baseAmount.setValue(new BigDecimal("0"));
-                baseAmount.setId(firstEntity.getId());
-                processorBaseAmount.onNext(baseAmount);
-            }
-        }
-
-        for (Map.Entry<String, JsonElement> entry : rateResponse.getRates().entrySet()) {
-            RateEntity entity = rateEntityRateEntityFactory.create(entry.getKey());
-            if (entity != null) {
-                try {
-                    entity.setValue(new BigDecimal(entry.getValue().getAsString()));
-                } catch (Exception e) {
-                    entity.setValue(new BigDecimal("1"));
+            List<RateEntity> rates = new ArrayList<>();
+            if (firstEntity != null) {
+                firstEntity.setValue(new BigDecimal("1"));
+                firstEntity.setBase(true);
+                rates.add(firstEntity);
+                synchronized (processorBaseAmount) {
+                    if (!processorBaseAmount.hasValue()) {
+                        final BaseAmount baseAmount = new BaseAmount();
+                        baseAmount.setValue(new BigDecimal("0"));
+                        baseAmount.setId(firstEntity.getId());
+                        processorBaseAmount.onNext(baseAmount);
+                    }
                 }
-                rates.add(entity);
             }
-        }
 
-        processorRateEntity.onNext(rates);
+            for (Map.Entry<String, JsonElement> entry : rateResponse.getRates().entrySet()) {
+                RateEntity entity = rateEntityRateEntityFactory.create(entry.getKey());
+                if (entity != null) {
+                    try {
+                        entity.setValue(new BigDecimal(entry.getValue().getAsString()));
+                    } catch (Exception e) {
+                        entity.setValue(new BigDecimal("1"));
+                    }
+                    rates.add(entity);
+                }
+            }
+
+            processorRateEntity.onNext(rates);
+        }
     }
 
     @Override
@@ -147,10 +157,13 @@ public class RatesRepositoryImpl implements RatesRepository {
         }, BackpressureStrategy.DROP);
     }
 
-    private synchronized boolean doSwapBaseRate(int id) {
+    private boolean doSwapBaseRate(int id) {
+        Log.v(TAG, String.valueOf(id));
+        synchronized (processorRateEntity) {
             if (processorRateEntity.hasValue()) {
-                final List<RateEntity> swapList = new ArrayList<>();
-                swapList.addAll(processorRateEntity.getValue());
+                final List<RateEntity> swapList = processorRateEntity.getValue();
+
+                Log.v(TAG, String.valueOf(id) + " size of array" + String.valueOf(swapList.size()));
                 int baseId = -1;
                 int nextBaseId = -1;
                 for (int i = 0; i < swapList.size(); i++) {
@@ -165,6 +178,7 @@ public class RatesRepositoryImpl implements RatesRepository {
                     }
                 }
                 if (baseId != -1 && nextBaseId != -1 && baseId != nextBaseId) {
+                    Log.v(TAG, String.valueOf(id) + " baseId" + String.valueOf(baseId) + " nextBaseId" + String.valueOf(nextBaseId));
                     RateEntity baseEntity = swapList.get(baseId);
                     RateEntity nextBaseEntity = swapList.get(nextBaseId);
                     baseEntity.setBase(false);
@@ -194,12 +208,24 @@ public class RatesRepositoryImpl implements RatesRepository {
                             }
                         }
                     } catch (Exception e) {
+                        Log.v(TAG, String.valueOf(id) + " exception");
                         return false;
                     }
+                    Log.v(TAG, String.valueOf(id) + " goesOnNext");
                     processorRateEntity.onNext(swapList);
+                    Log.v(TAG, String.valueOf(id) + " finish successful");
                     return true;
+                } else {
+                    if (baseId == nextBaseId) {
+                        Log.v(TAG, String.valueOf(id) + " base equals!!!!");
+                    } else {
+                        Log.v(TAG, String.valueOf(id) + " not found value!!!!");
+                    }
                 }
+
             }
+        }
+            Log.v(TAG, String.valueOf(id) + " no value!!!!");
             return false;
     }
 }
