@@ -4,7 +4,6 @@ import org.paramedic.homeless.currenciestest.mvp.base.BaseFragmentPresenter;
 import org.paramedic.homeless.currenciestest.mvp.model.AllRatesFragmentModel;
 import org.paramedic.homeless.currenciestest.mvp.view.AllRatesFragmentView;
 
-import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -54,9 +53,14 @@ public class AllRatesFragmentPresenter extends BaseFragmentPresenter<AllRatesFra
         return allRatesFragmentModel;
     }
 
-    public Flowable<Boolean> swapBaseRate(int itemId) {
-        return getModel().swapBaseRate(itemId)
+    public void swapBaseRate(int itemId) {
+        getModel().swapBaseRate(itemId)
                 .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+                            //call successful
+                        }
+                        , Throwable::printStackTrace
+                );
     }
 }

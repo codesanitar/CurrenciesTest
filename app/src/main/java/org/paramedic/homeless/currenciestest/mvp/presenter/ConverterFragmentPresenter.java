@@ -8,7 +8,6 @@ import org.paramedic.homeless.currenciestest.service.data.repository.BaseAmount;
 
 import java.math.BigDecimal;
 
-import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -58,10 +57,15 @@ public class ConverterFragmentPresenter extends BaseFragmentPresenter<ConverterF
         return converterFragmentModel;
     }
 
-    public Flowable<Boolean> swapBaseRate(int itemId) {
-        return getModel().swapBaseRate(itemId)
+    public void swapBaseRate(int itemId) {
+        getModel().swapBaseRate(itemId)
                 .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+                            //call successful
+                        }
+                        , Throwable::printStackTrace
+                );
     }
 
     public void updateBaseAmount(int itemId, String value) {

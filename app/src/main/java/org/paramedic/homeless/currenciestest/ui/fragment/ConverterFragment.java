@@ -125,10 +125,6 @@ public class ConverterFragment extends RevBaseFragment<ConverterFragmentView, Co
             if (itemId > 0) {
                 getPresenter().swapBaseRate(itemId);
             }
-            getPresenter().swapBaseRate(itemId)
-                    .subscribe(aBoolean -> {}
-                            , Throwable::printStackTrace
-                    );
         }
     }
 

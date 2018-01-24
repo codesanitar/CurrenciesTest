@@ -123,10 +123,7 @@ public class AllRatesFragment extends RevBaseFragment<AllRatesFragmentView, AllR
         if (adapter != null && ! recyclerView.isAnimating()) {
             final int itemId = (int)adapter.getItemId(position);
             if (itemId > 0) {
-                getPresenter().swapBaseRate(itemId)
-                        .subscribe(aBoolean -> {}
-                                , Throwable::printStackTrace
-                        );
+                getPresenter().swapBaseRate(itemId);
             }
         }
     }
