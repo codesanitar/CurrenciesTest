@@ -9,6 +9,7 @@ import org.paramedic.homeless.currenciestest.service.data.repository.BaseAmount;
 import java.math.BigDecimal;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -16,6 +17,7 @@ public class ConverterFragmentPresenter extends BaseFragmentPresenter<ConverterF
 
     private final ConverterFragmentModel converterFragmentModel;
     private boolean recyclerInitialized = false;
+    private Disposable contentSubscription;
 
     public ConverterFragmentPresenter(ConverterFragmentModel converterFragmentModel) {
         this.converterFragmentModel = converterFragmentModel;
@@ -31,8 +33,10 @@ public class ConverterFragmentPresenter extends BaseFragmentPresenter<ConverterF
         super.onViewCreated();
         recyclerInitialized = false;
         //subscribe to Rates changes
-        getCompositeDisposable().add(
-                getModel().getContent()
+        if (contentSubscription != null) {
+            getCompositeDisposable().remove(contentSubscription);
+        }
+        contentSubscription = getModel().getContent()
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(rateEntities -> {
@@ -45,8 +49,8 @@ public class ConverterFragmentPresenter extends BaseFragmentPresenter<ConverterF
                             }
                         }
                     }
-                    , Throwable::printStackTrace)
-        );
+                    , Throwable::printStackTrace);
+        getCompositeDisposable().add(contentSubscription);
     }
 
     /**
@@ -58,26 +62,18 @@ public class ConverterFragmentPresenter extends BaseFragmentPresenter<ConverterF
     }
 
     public void swapBaseRate(int itemId) {
-        getModel().swapBaseRate(itemId)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aBoolean -> {
-                            //call successful
-                        }
-                        , Throwable::printStackTrace
-                );
+        getModel().swapBaseRate(itemId);
     }
 
     public void updateBaseAmount(int itemId, String value) {
         if (!StringUtils.isNumeric(value)) {
             return;
         }
-        BaseAmount baseAmount = new BaseAmount();
-        baseAmount.setId(itemId);
+        BaseAmount baseAmount;
         try {
-            baseAmount.setValue(new BigDecimal(value));
+            baseAmount = new BaseAmount(itemId, new BigDecimal(value));
         } catch (Exception e) {
-            baseAmount.setValue(new BigDecimal("0"));
+            baseAmount = new BaseAmount(itemId, new BigDecimal("0"));
         }
         getModel().updateBaseAmount(baseAmount);
     }

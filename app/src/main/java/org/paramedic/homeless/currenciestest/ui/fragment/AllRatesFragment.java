@@ -46,7 +46,7 @@ public class AllRatesFragment extends RevBaseFragment<AllRatesFragmentView, AllR
     private Parcelable layoutManagerState = null;
     private RecyclerView recyclerView;
     private LinearLayoutManager recyclerViewLayoutManager;
-    public static final String LAYOUT_STATE = "LayoutState";
+    private static final String LAYOUT_STATE = "LayoutState";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -67,7 +67,7 @@ public class AllRatesFragment extends RevBaseFragment<AllRatesFragmentView, AllR
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.all_rates_fragment_item_list, container, false);
 
@@ -143,7 +143,7 @@ public class AllRatesFragment extends RevBaseFragment<AllRatesFragmentView, AllR
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         if (recyclerViewLayoutManager != null) {
             outState.putParcelable(LAYOUT_STATE, recyclerViewLayoutManager.onSaveInstanceState());
         }

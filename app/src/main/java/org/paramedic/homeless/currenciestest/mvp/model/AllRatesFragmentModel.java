@@ -26,10 +26,10 @@ public final class AllRatesFragmentModel extends BaseModel {
     }
 
     public Flowable<List<RateEntity>> getRates() {
-        return ratesRepository.getContent();
+        return ratesRepository.getRates();
     }
 
-    public Flowable<Boolean> swapBaseRate(int id) {
-        return ratesRepository.swapBaseRate(id);
+    public void swapBaseRate(int id) {
+        ratesRepository.saveBaseEntityRate(id);
     }
 }

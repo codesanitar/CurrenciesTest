@@ -9,7 +9,7 @@ import org.paramedic.homeless.currenciestest.di.module.CoreModule;
 import org.paramedic.homeless.currenciestest.di.module.PresenterModule;
 
 /**
- * Created by codesanitar on 16/01/18.
+ * Created by codesanitar on 12/02/19.
  */
 
 public class RevApplication extends Application implements MvpComponentProvider {

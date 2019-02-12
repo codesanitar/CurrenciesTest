@@ -1,6 +1,7 @@
 package org.paramedic.homeless.currenciestest.ui.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -12,25 +13,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.paramedic.homeless.currenciestest.R;
-import org.paramedic.homeless.currenciestest.service.data.repository.ConvertibleRateEntity;
+import org.paramedic.homeless.currenciestest.service.data.repository.RateEntity;
 
 import java.util.List;
 
 public class ConverterRecyclerViewAdapter extends RecyclerView.Adapter<ConverterRecyclerViewAdapter.ViewHolder> {
 
-    private final List<ConvertibleRateEntity> mValues;
+    private final List<RateEntity> mValues;
     private final OnListFragmentInteractionListener mListener;
     private final Context context;
 
 
-    public ConverterRecyclerViewAdapter(Context context, List<ConvertibleRateEntity> items, OnListFragmentInteractionListener listener) {
+    public ConverterRecyclerViewAdapter(Context context, List<RateEntity> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
         this.context = context;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.converter_fragment_item, parent, false);
         return new ViewHolder(view);
@@ -39,10 +41,10 @@ public class ConverterRecyclerViewAdapter extends RecyclerView.Adapter<Converter
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mNameView.setText(mValues.get(position).getName());
-        holder.mDescription.setText(mValues.get(position).getDescription());
-        holder.mImage.setImageResource(mValues.get(position).getImageId());
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        holder.mNameView.setText(mValues.get(position).getCurrency().name());
+        holder.mDescription.setText(mValues.get(position).getCurrency().getDescription());
+        holder.mImage.setImageResource(mValues.get(position).getCurrency().getImageId());
 
         if (!holder.mContentView.hasFocus()) {
             holder.mContentView.setText(mValues.get(position).getAmount());
@@ -82,14 +84,14 @@ public class ConverterRecyclerViewAdapter extends RecyclerView.Adapter<Converter
 
     @Override
     public long getItemId(int position) {
-        return isDataValid()?mValues.get(position).getId():-1;
+        return isDataValid()?mValues.get(position).getCurrency().getId():-1;
     }
 
     private boolean isDataValid() {
         return mValues != null;
     }
 
-    public void refreshContent(List<ConvertibleRateEntity> rateEntities) {
+    public void refreshContent(List<RateEntity> rateEntities) {
         mValues.clear();
         mValues.addAll(rateEntities);
         notifyDataSetChanged();
@@ -105,10 +107,10 @@ public class ConverterRecyclerViewAdapter extends RecyclerView.Adapter<Converter
         ViewHolder(View view) {
             super(view);
             mView = view;
-            mNameView = (TextView) view.findViewById(R.id.name);
-            mDescription = (TextView) view.findViewById(R.id.description);
-            mImage = (ImageView) view.findViewById(R.id.image);
-            mContentView = (EditText) view.findViewById(R.id.content);
+            mNameView = view.findViewById(R.id.name);
+            mDescription = view.findViewById(R.id.description);
+            mImage = view.findViewById(R.id.image);
+            mContentView = view.findViewById(R.id.content);
         }
 
         @Override

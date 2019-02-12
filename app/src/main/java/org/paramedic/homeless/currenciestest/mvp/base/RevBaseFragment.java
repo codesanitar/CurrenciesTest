@@ -21,14 +21,14 @@ public abstract class RevBaseFragment<V extends BaseView, P extends BaseFragment
         layoutEmpty = view.findViewById(R.id.layout_empty);
     }
 
-    public void hideEmptyAnimation() {
+    protected void hideEmptyAnimation() {
         if (emptyAnimationAllowed) {
             layoutEmpty.setVisibility(View.GONE);
             emptyAnimationAllowed = false;
         }
     }
 
-    public void showEmptyAnimation() {
+    protected void showEmptyAnimation() {
         if (!emptyAnimationAllowed) {
             layoutEmpty.setVisibility(View.VISIBLE);
             emptyAnimationAllowed = true;

@@ -4,7 +4,7 @@ package org.paramedic.homeless.currenciestest.mvp.model;
 import org.paramedic.homeless.currenciestest.di.scope.MvpScope;
 import org.paramedic.homeless.currenciestest.mvp.base.BaseModel;
 import org.paramedic.homeless.currenciestest.service.data.repository.BaseAmount;
-import org.paramedic.homeless.currenciestest.service.data.repository.ConvertibleRateEntity;
+import org.paramedic.homeless.currenciestest.service.data.repository.RateEntity;
 import org.paramedic.homeless.currenciestest.service.data.repository.RatesRepository;
 
 import java.util.List;
@@ -26,15 +26,15 @@ public final class ConverterFragmentModel extends BaseModel {
     public ConverterFragmentModel() {
     }
 
-    public Flowable<List<ConvertibleRateEntity>> getContent() {
-        return ratesRepository.getConvertibleContent();
+    public Flowable<List<RateEntity>> getContent() {
+        return ratesRepository.getRatesWithAmount();
     }
 
-    public Flowable<Boolean> swapBaseRate(int id) {
-        return ratesRepository.swapBaseRate(id);
+    public void swapBaseRate(int id) {
+        ratesRepository.saveBaseEntityRate(id);
     }
 
     public void updateBaseAmount(BaseAmount baseAmount) {
-        ratesRepository.updateAmount(baseAmount);
+        ratesRepository.saveBaseAmount(baseAmount);
     }
 }

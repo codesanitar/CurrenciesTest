@@ -22,7 +22,7 @@ public abstract class BasePresenterImpl<V> implements BasePresenter<V> {
         return compositeDisposable;
     }
 
-    protected V mView;
+    V mView;
 
     @Override
     public void onViewAttached(V view) {

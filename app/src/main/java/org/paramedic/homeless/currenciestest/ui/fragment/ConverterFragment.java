@@ -16,7 +16,7 @@ import org.paramedic.homeless.currenciestest.mvp.base.RevBaseFragment;
 import org.paramedic.homeless.currenciestest.mvp.base.loader.PresenterFactory;
 import org.paramedic.homeless.currenciestest.mvp.presenter.ConverterFragmentPresenter;
 import org.paramedic.homeless.currenciestest.mvp.view.ConverterFragmentView;
-import org.paramedic.homeless.currenciestest.service.data.repository.ConvertibleRateEntity;
+import org.paramedic.homeless.currenciestest.service.data.repository.RateEntity;
 import org.paramedic.homeless.currenciestest.ui.adapter.ConverterRecyclerViewAdapter;
 
 import java.util.List;
@@ -67,7 +67,7 @@ public class ConverterFragment extends RevBaseFragment<ConverterFragmentView, Co
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.converter_fragment_item_list, container, false);
 
@@ -86,7 +86,7 @@ public class ConverterFragment extends RevBaseFragment<ConverterFragmentView, Co
     }
 
     @Override
-    public void refreshContent(List<ConvertibleRateEntity> rateEntities) {
+    public void refreshContent(List<RateEntity> rateEntities) {
         adapter.refreshContent(rateEntities);
         if (rateEntities.size() > 0) {
             hideEmptyAnimation();
@@ -94,7 +94,7 @@ public class ConverterFragment extends RevBaseFragment<ConverterFragmentView, Co
     }
 
     @Override
-    public void initRecycler(List<ConvertibleRateEntity> recentRates) {
+    public void initRecycler(List<RateEntity> recentRates) {
         if (recyclerViewLayoutManager == null) {
             recyclerViewLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
             recyclerViewLayoutManager.supportsPredictiveItemAnimations();
@@ -150,7 +150,7 @@ public class ConverterFragment extends RevBaseFragment<ConverterFragmentView, Co
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         if (recyclerViewLayoutManager != null) {
             outState.putParcelable(LAYOUT_STATE, recyclerViewLayoutManager.onSaveInstanceState());
         }

@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import org.paramedic.homeless.currenciestest.R;
 
 public class TextInputLimitedEditText extends TextInputEditText {
-    protected int maxInputLength = -1;
+    private int maxInputLength = -1;
 
     public TextInputLimitedEditText(Context context) {
         super(context);

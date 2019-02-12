@@ -27,7 +27,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by codesanitar on 16/01/18.
+ * Created by codesanitar on 12/02/19.
  */
 
 @Module
@@ -96,7 +96,7 @@ public class CoreModule {
 
     @Provides
     @Singleton
-    RatesRepository getCurrenciesContent() {
-        return new RatesRepositoryImpl();
+    RatesRepository getCurrenciesContent(Application application, Gson gson) {
+        return new RatesRepositoryImpl(application, gson);
     }
 }

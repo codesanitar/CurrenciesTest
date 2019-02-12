@@ -5,6 +5,7 @@ import org.paramedic.homeless.currenciestest.mvp.model.AllRatesFragmentModel;
 import org.paramedic.homeless.currenciestest.mvp.view.AllRatesFragmentView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -12,6 +13,7 @@ public class AllRatesFragmentPresenter extends BaseFragmentPresenter<AllRatesFra
 
     private final AllRatesFragmentModel allRatesFragmentModel;
     private boolean recyclerInitialized = false;
+    private Disposable contentSubscription;
 
     public AllRatesFragmentPresenter(AllRatesFragmentModel allRatesFragmentModel) {
         this.allRatesFragmentModel = allRatesFragmentModel;
@@ -27,8 +29,10 @@ public class AllRatesFragmentPresenter extends BaseFragmentPresenter<AllRatesFra
         super.onViewCreated();
         recyclerInitialized = false;
         //subscribe to Rates changes
-        getCompositeDisposable().add(
-                getModel().getRates()
+        if (contentSubscription != null) {
+            getCompositeDisposable().remove(contentSubscription);
+        }
+        contentSubscription = getModel().getRates()
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(rateEntities -> {
@@ -41,8 +45,8 @@ public class AllRatesFragmentPresenter extends BaseFragmentPresenter<AllRatesFra
                             }
                         }
                     }
-                    , Throwable::printStackTrace)
-        );
+                    , Throwable::printStackTrace);
+        getCompositeDisposable().add(contentSubscription);
     }
 
     /**
@@ -54,13 +58,6 @@ public class AllRatesFragmentPresenter extends BaseFragmentPresenter<AllRatesFra
     }
 
     public void swapBaseRate(int itemId) {
-        getModel().swapBaseRate(itemId)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aBoolean -> {
-                            //call successful
-                        }
-                        , Throwable::printStackTrace
-                );
+        getModel().swapBaseRate(itemId);
     }
 }

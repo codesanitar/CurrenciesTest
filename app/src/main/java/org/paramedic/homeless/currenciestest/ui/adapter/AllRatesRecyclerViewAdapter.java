@@ -1,5 +1,6 @@
 package org.paramedic.homeless.currenciestest.ui.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,18 +25,19 @@ public class AllRatesRecyclerViewAdapter extends RecyclerView.Adapter<AllRatesRe
         mListener = listener;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.all_rates_fragment_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mNameView.setText(mValues.get(position).getName());
-        holder.mDescription.setText(mValues.get(position).getDescription());
-        holder.mImage.setImageResource(mValues.get(position).getImageId());
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        holder.mNameView.setText(mValues.get(position).getCurrency().name());
+        holder.mDescription.setText(mValues.get(position).getCurrency().getDescription());
+        holder.mImage.setImageResource(mValues.get(position).getCurrency().getImageId());
 
         holder.mContentView.setText(mValues.get(position).getValue().setScale(5, DEFAULT_ROUNDING_MODE).toPlainString());
 
@@ -53,7 +55,7 @@ public class AllRatesRecyclerViewAdapter extends RecyclerView.Adapter<AllRatesRe
 
     @Override
     public long getItemId(int position) {
-        return isDataValid()?mValues.get(position).getId():-1;
+        return isDataValid()?mValues.get(position).getCurrency().getId():-1;
     }
 
     private boolean isDataValid() {
@@ -76,10 +78,10 @@ public class AllRatesRecyclerViewAdapter extends RecyclerView.Adapter<AllRatesRe
         ViewHolder(View view) {
             super(view);
             mView = view;
-            mNameView = (TextView) view.findViewById(R.id.name);
-            mDescription = (TextView) view.findViewById(R.id.description);
-            mImage = (ImageView) view.findViewById(R.id.image);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mNameView = view.findViewById(R.id.name);
+            mDescription = view.findViewById(R.id.description);
+            mImage = view.findViewById(R.id.image);
+            mContentView = view.findViewById(R.id.content);
         }
 
         @Override

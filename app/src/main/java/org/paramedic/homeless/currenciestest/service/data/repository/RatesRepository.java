@@ -5,21 +5,23 @@ import org.paramedic.homeless.currenciestest.service.data.response.RateResponse;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 /**
- * Created by codesanitar on 18/01/18.
+ * Created by codesanitar on 12/02/19.
  */
 
 public interface RatesRepository {
-    Flowable<List<RateEntity>> getContent();
 
-    Flowable<List<ConvertibleRateEntity>> getConvertibleContent();
+    Flowable<List<RateEntity>> getRates();
 
-    void updateAmount(BaseAmount baseAmount);
+    Flowable<List<RateEntity>> getRatesWithAmount();
 
-    void updateRates(RateResponse rateResponse);
+    void saveBaseAmount(BaseAmount baseAmount);
 
-    Flowable<Boolean> swapBaseRate(int id);
+    void saveRates(RateResponse rateResponse);
 
-    Flowable<RateEntity> getBaseEntity();
+    boolean saveBaseEntityRate(int id);
+
+    Single<String> getBaseEntityName();
 }

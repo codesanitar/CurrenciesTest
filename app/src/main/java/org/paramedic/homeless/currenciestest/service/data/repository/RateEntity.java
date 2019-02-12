@@ -5,32 +5,20 @@ import org.paramedic.homeless.currenciestest.service.data.Currency;
 import java.math.BigDecimal;
 
 /**
- * Created by codesanitar on 17/01/18.
+ * Created by codesanitar on 12/02/19.
  */
 
 public class RateEntity {
-    private int id;
-    private String name;
     private BigDecimal value;
-    private boolean base = false;
-    private String date;
-    private String description;
-    private int imageId;
+    private String amount;
+    final private Currency currency;
 
-    RateEntity(String name) {
-        final Currency currency = Currency.valueOf(name);
-        this.id = currency.getId();
-        this.name = currency.getName();
-        this.description = currency.getDescription();
-        this.imageId = currency.getImageId();
+    RateEntity(Currency currency) {
+        this.currency = currency;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public Currency getCurrency() {
+        return currency;
     }
 
     public BigDecimal getValue() {
@@ -41,43 +29,11 @@ public class RateEntity {
         this.value = value;
     }
 
-    public boolean isBase() {
-        return base;
+    public String getAmount() {
+        return amount;
     }
 
-    public void setBase(boolean base) {
-        this.base = base;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 }

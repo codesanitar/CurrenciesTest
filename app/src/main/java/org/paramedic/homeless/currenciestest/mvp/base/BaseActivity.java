@@ -37,8 +37,7 @@ public abstract class BaseActivity<P extends BasePresenter<V>, V> extends AppCom
         super.onCreate(savedInstanceState);
 
         mFirstStart = true;
-
-        getSupportLoaderManager().initLoader(0, null, this).startLoading();
+        LoaderManager.getInstance(this).initLoader(0, null, this).startLoading();
     }
 
     /**
@@ -100,7 +99,7 @@ public abstract class BaseActivity<P extends BasePresenter<V>, V> extends AppCom
     }
 
     @Override
-    public final void onLoadFinished(Loader<P> loader, P presenter) {
+    public final void onLoadFinished(@NonNull Loader<P> loader, P presenter) {
         mPresenter = presenter;
 
         if (mNeedToCallStart.compareAndSet(true, false)) {
@@ -109,7 +108,7 @@ public abstract class BaseActivity<P extends BasePresenter<V>, V> extends AppCom
     }
 
     @Override
-    public final void onLoaderReset(Loader<P> loader) {
+    public final void onLoaderReset(@NonNull Loader<P> loader) {
         mPresenter = null;
     }
 

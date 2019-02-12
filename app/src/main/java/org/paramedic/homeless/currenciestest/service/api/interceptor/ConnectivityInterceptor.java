@@ -15,7 +15,7 @@ import okhttp3.Response;
 
 public class ConnectivityInterceptor implements Interceptor {
  
-    private Context mContext;
+    private final Context mContext;
  
     public ConnectivityInterceptor(Context context) {
         mContext = context;

@@ -3,7 +3,7 @@ package org.paramedic.homeless.currenciestest.service.data.response;
 import com.google.gson.JsonObject;
 
 /**
- * Created by codesanitar on 16/01/18.
+ * Created by codesanitar on 12/02/19.
  */
 
 public class RateResponse {

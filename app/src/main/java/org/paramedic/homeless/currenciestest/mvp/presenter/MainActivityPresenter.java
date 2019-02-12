@@ -19,9 +19,8 @@ import static org.paramedic.homeless.currenciestest.StaticConfig.REQUEST_INTERVA
 public class MainActivityPresenter extends BaseActivityPresenter<MainActivityView> {
 
     private final MainActivityModel mainActivityModel;
-    private Disposable scheduleRatesRequest = null;
+    private Disposable scheduleRatesRequest;
     private boolean successRequest = true;
-    private String base = null;
 
     public MainActivityPresenter(MainActivityModel mainActivityModel) {
         this.mainActivityModel = mainActivityModel;
@@ -35,47 +34,14 @@ public class MainActivityPresenter extends BaseActivityPresenter<MainActivityVie
     @Override
     protected void onViewCreated() {
         super.onViewCreated();
-
-        getCompositeDisposable().add(
-                getModel().getBaseEntity()
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(rateEntity -> base = rateEntity.getName()
-                                , Throwable::printStackTrace)
-        );
-
-
-        getCompositeDisposable().add(getModel().requestRates(base)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    if (hasView()) {
-                        getView().ratesRequestCompleted(s);
-                    }
-                    successRequest = true;
-                }, throwable -> {
-                    throwable.printStackTrace();
-                    if (successRequest) {
-                        if (throwable instanceof NoConnectivityException && hasView()) {
-                            getView().connectionError();
-                        } else {
-                            if (hasView()) {
-                                getView().couldNotCompleteRequest();
-                            }
-                        }
-                        successRequest = false;
-                    }
-                }));
     }
 
     public void startRatesRequests() {
-        if (scheduleRatesRequest != null && !scheduleRatesRequest.isDisposed()) {
-            scheduleRatesRequest.dispose();
-        }
-
-        scheduleRatesRequest = Flowable.interval(REQUEST_INTERVAL_SECONDS, TimeUnit.SECONDS)
+        stopRatesRequests();
+        scheduleRatesRequest = Flowable.interval(0, REQUEST_INTERVAL_SECONDS, TimeUnit.SECONDS)
                 .onBackpressureDrop()
-                .flatMap(aLong -> getModel().requestRates(base))
+                .flatMapSingle(tick -> getModel().getBaseEntityName(), false, 1)
+                .flatMapSingle(baseCurrency -> getModel().requestRates(baseCurrency), false, 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
@@ -97,11 +63,13 @@ public class MainActivityPresenter extends BaseActivityPresenter<MainActivityVie
                     }
                     startRatesRequests();
                 });
+        getCompositeDisposable().add(scheduleRatesRequest);
     }
 
     public void stopRatesRequests() {
-        if (scheduleRatesRequest != null && !scheduleRatesRequest.isDisposed()) {
-            scheduleRatesRequest.dispose();
+        if (scheduleRatesRequest != null) {
+            getCompositeDisposable().remove(scheduleRatesRequest);
+            scheduleRatesRequest = null;
         }
     }
 

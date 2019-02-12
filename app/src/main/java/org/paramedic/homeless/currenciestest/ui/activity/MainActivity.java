@@ -51,7 +51,7 @@ public class MainActivity extends RevBaseActivity<MainActivityView, MainActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorMain);
+        coordinatorLayout = findViewById(R.id.coordinatorMain);
         viewPagerContainer = findViewById(R.id.view_pager_container);
         tabs = findViewById(R.id.tabs);
         ActionBar actionBar = getSupportActionBar();

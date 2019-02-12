@@ -1,7 +1,7 @@
 package org.paramedic.homeless.currenciestest.mvp.base;
 
 /**
- * Created by codesanitar on 17/01/18.
+ * Created by codesanitar on 12/02/19.
  */
 
 public abstract class BaseFragmentPresenter <V extends BaseView>

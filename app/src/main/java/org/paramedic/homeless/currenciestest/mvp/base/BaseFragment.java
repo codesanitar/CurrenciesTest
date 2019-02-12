@@ -42,8 +42,7 @@ public abstract class BaseFragment<P extends BasePresenter<V>, V> extends Fragme
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        getLoaderManager().initLoader(0, null, this).startLoading();
+        LoaderManager.getInstance(this).initLoader(0, null, this).startLoading();
     }
 
 
@@ -89,7 +88,7 @@ public abstract class BaseFragment<P extends BasePresenter<V>, V> extends Fragme
     }
 
     @Override
-    public final void onLoadFinished(Loader<P> loader, P presenter) {
+    public final void onLoadFinished(@NonNull Loader<P> loader, P presenter) {
         mPresenter = presenter;
 
         if (mNeedToCallStart.compareAndSet(true, false)) {
@@ -98,7 +97,7 @@ public abstract class BaseFragment<P extends BasePresenter<V>, V> extends Fragme
     }
 
     @Override
-    public final void onLoaderReset(Loader<P> loader) {
+    public final void onLoaderReset(@NonNull Loader<P> loader) {
         mPresenter = null;
     }
 
@@ -113,7 +112,7 @@ public abstract class BaseFragment<P extends BasePresenter<V>, V> extends Fragme
     protected abstract void injectDependencies(MvpComponent mvpComponent);
 
     private MvpComponent getMvpComponent() {
-        if (getActivity().getApplication() instanceof MvpComponentProvider) {
+        if (getActivity() != null && getActivity().getApplication() instanceof MvpComponentProvider) {
             return ((MvpComponentProvider)getActivity().getApplication()).generateMvpComponent();
         }
         throw new RuntimeException(getActivity().getApplication().toString()

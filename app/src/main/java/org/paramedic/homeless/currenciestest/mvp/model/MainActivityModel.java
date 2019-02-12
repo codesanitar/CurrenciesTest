@@ -4,13 +4,12 @@ package org.paramedic.homeless.currenciestest.mvp.model;
 import org.paramedic.homeless.currenciestest.di.scope.MvpScope;
 import org.paramedic.homeless.currenciestest.mvp.base.BaseModel;
 import org.paramedic.homeless.currenciestest.service.api.DuckDNSClient;
-import org.paramedic.homeless.currenciestest.service.data.response.RateResponse;
-import org.paramedic.homeless.currenciestest.service.data.repository.RateEntity;
 import org.paramedic.homeless.currenciestest.service.data.repository.RatesRepository;
+import org.paramedic.homeless.currenciestest.service.data.response.RateResponse;
 
 import javax.inject.Inject;
 
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 @MvpScope
@@ -28,7 +27,7 @@ public final class MainActivityModel extends BaseModel {
     public MainActivityModel() {
     }
 
-    public Flowable<String> requestRates(String base) {
+    public Single<String> requestRates(String base) {
         return duckDNSClient.latestRates(base)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
@@ -37,11 +36,11 @@ public final class MainActivityModel extends BaseModel {
     }
 
     private String writeToDB(RateResponse rateResponse) {
-        ratesRepository.updateRates(rateResponse);
+        ratesRepository.saveRates(rateResponse);
         return rateResponse.getDate();
     }
 
-    public Flowable<RateEntity> getBaseEntity() {
-        return ratesRepository.getBaseEntity();
+    public Single<String> getBaseEntityName() {
+        return ratesRepository.getBaseEntityName();
     }
 }

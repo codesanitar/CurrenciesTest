@@ -12,7 +12,6 @@ public abstract class RevBaseActivity<V extends BaseView, P extends BaseActivity
         extends BaseActivity<P,V>
 {
     protected final String TAG = this.getClass().getSimpleName();
-    private Toolbar mToolbar;
 
     abstract protected CoordinatorLayout getCoordinatorLayout();
 
@@ -24,7 +23,7 @@ public abstract class RevBaseActivity<V extends BaseView, P extends BaseActivity
     }
 
     private void initToolBar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
             mToolbar.setNavigationOnClickListener(view -> onBackPressed());
